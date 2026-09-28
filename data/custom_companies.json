@@ -1,0 +1,19 @@
+[
+  {
+    "company_id": "X1",
+    "company_name": "Tiger Analytics",
+    "role": "Data Analyst",
+    "company_type": "Service-based",
+    "jd_skills": [
+      "SQL",
+      "DBMS",
+      "Git",
+      "Problem Solving",
+      "AWS",
+      "Java",
+      "MongoDB",
+      "Python"
+    ],
+    "deadline": "2026-10-05"
+  }
+]
