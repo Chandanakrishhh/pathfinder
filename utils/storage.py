@@ -24,30 +24,59 @@ def slug(name):
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
 
-def save_profile(name, skills, history, pdf_bytes, checked_skills):
+def read_profiles():
+    profiles = read(PROFILES)
+    for p in profiles:
+        if "resumes" not in p:
+            p["resumes"] = [{
+                "label": "Main",
+                "file": p.pop("resume_file"),
+                "skills": p.pop("resume_skills"),
+                "checked_skills": p.pop("checked_skills")
+            }]
+    return profiles
+
+
+def save_resume(name, label, skills, history, pdf_bytes, checked_skills):
     os.makedirs(UPLOADS, exist_ok=True)
     sid = "U_" + slug(name)
-    filename = UPLOADS + "/" + sid + ".pdf"
+    filename = UPLOADS + "/" + sid + "_" + (slug(label) or "resume") + ".pdf"
     with open(filename, "wb") as f:
         f.write(pdf_bytes)
-    profiles = [p for p in read(PROFILES) if p["student_id"] != sid]
-    profiles.append({
-        "student_id": sid,
-        "name": name,
-        "resume_skills": skills,
-        "checked_skills": checked_skills,
-        "resume_file": filename,
-        "history": history
-    })
+    entry = {"label": label, "file": filename, "skills": skills, "checked_skills": checked_skills}
+    profiles = read_profiles()
+    person = None
+    for p in profiles:
+        if p["student_id"] == sid:
+            person = p
+    if person is None:
+        person = {"student_id": sid, "name": name, "resumes": [], "history": history}
+        profiles.append(person)
+    person["resumes"] = [r for r in person["resumes"] if r["label"] != label] + [entry]
+    if history:
+        person["history"] = history
     write(PROFILES, profiles)
     return sid
 
 
-def delete_profile(sid):
-    profiles = read(PROFILES)
+def delete_resume(sid, label):
+    profiles = read_profiles()
     for p in profiles:
-        if p["student_id"] == sid and os.path.exists(p["resume_file"]):
-            os.remove(p["resume_file"])
+        if p["student_id"] == sid:
+            for r in p["resumes"]:
+                if r["label"] == label and os.path.exists(r["file"]):
+                    os.remove(r["file"])
+            p["resumes"] = [r for r in p["resumes"] if r["label"] != label]
+    write(PROFILES, [p for p in profiles if p["resumes"]])
+
+
+def delete_profile(sid):
+    profiles = read_profiles()
+    for p in profiles:
+        if p["student_id"] == sid:
+            for r in p["resumes"]:
+                if os.path.exists(r["file"]):
+                    os.remove(r["file"])
     write(PROFILES, [p for p in profiles if p["student_id"] != sid])
 
 

@@ -1,9 +1,11 @@
 import io
+import os
 from datetime import date, timedelta
 import streamlit as st
 import pandas as pd
 from pipeline.run_pipeline import load, run_pipeline
-from utils.resume_parser import extract_skills, find_skills
+from agents.readiness_agent import run_readiness
+from utils.resume_parser import extract_skills, find_skills, read_pdf
 from utils import storage
 
 st.set_page_config(page_title="Path Finder", layout="wide")
@@ -37,6 +39,16 @@ def retag(rows, sid):
     return [dict(r, student_id=sid) for r in rows]
 
 
+def resume_skills(r):
+    skills = list(r["skills"])
+    try:
+        fresh = extract_skills(r["file"], all_skills)
+        skills += [s for s in fresh if s not in r["checked_skills"] and s not in skills]
+    except FileNotFoundError:
+        st.warning("Resume file for " + r["label"] + " is missing. Using saved skills only")
+    return skills
+
+
 def past_interviews():
     count = st.sidebar.number_input("Past interviews", 0, 5, 0)
     rows = []
@@ -57,6 +69,7 @@ def past_interviews():
 
 mode = st.sidebar.radio("Choose input", ["Sample student", "Upload new resume", "Saved profile"])
 student = None
+person = None
 user_history = base_history
 
 if mode == "Sample student":
@@ -68,6 +81,7 @@ if mode == "Sample student":
 
 elif mode == "Upload new resume":
     name = st.sidebar.text_input("Your name")
+    label = st.sidebar.text_input("Resume label", value="Main")
     file = st.sidebar.file_uploader("Upload your resume (PDF)", type="pdf")
     if file:
         pdf_bytes = file.getvalue()
@@ -85,33 +99,41 @@ elif mode == "Upload new resume":
             elif not agree:
                 st.sidebar.error("Tick the consent box first")
             else:
-                storage.save_profile(name, skills, past, pdf_bytes, all_skills)
-                st.session_state["msg"] = "Profile saved. Open it later from Saved profile"
+                label = label.strip() or "Main"
+                storage.save_resume(name, label, skills, past, pdf_bytes, all_skills)
+                st.session_state["msg"] = "Saved as " + label + ". Open it later from Saved profile"
                 st.rerun()
     else:
         st.info("Upload a text-based PDF resume from the sidebar")
 
 else:
-    profiles = storage.read(storage.PROFILES)
+    profiles = storage.read_profiles()
     if not profiles:
         st.info("No saved profiles yet. Upload a resume and save it first")
     else:
         names = [p["name"] for p in profiles]
         choice = st.sidebar.selectbox("Select saved profile", names)
-        p = profiles[names.index(choice)]
-        skills = list(p["resume_skills"])
-        try:
-            fresh = extract_skills(p["resume_file"], all_skills)
-            skills += [s for s in fresh if s not in p["checked_skills"] and s not in skills]
-        except FileNotFoundError:
-            st.warning("Saved resume file is missing. Using saved skills only")
-        student = {"student_id": p["student_id"], "name": p["name"], "resume_skills": skills}
-        user_history = base_history + retag(p["history"], p["student_id"])
-        st.subheader("Skills for " + p["name"])
+        person = profiles[names.index(choice)]
+        labels = [r["label"] for r in person["resumes"]]
+        label = st.sidebar.selectbox("Resume version", labels)
+        r = person["resumes"][labels.index(label)]
+        skills = resume_skills(r)
+        student = {"student_id": person["student_id"], "name": person["name"], "resume_skills": skills}
+        user_history = base_history + retag(person["history"], person["student_id"])
+        st.subheader("Skills for " + person["name"] + " (" + label + ")")
         st.write(", ".join(skills))
-        st.caption("Resume file: " + p["resume_file"])
-        if st.sidebar.button("Delete this profile and resume"):
-            storage.delete_profile(p["student_id"])
+        if os.path.exists(r["file"]):
+            with open(r["file"], "rb") as f:
+                st.download_button("Open or download this resume", f.read(), file_name=label + ".pdf", mime="application/pdf")
+            with st.expander("What Path Finder read from this resume"):
+                st.text(read_pdf(r["file"]))
+        st.caption("To add another version, use Upload new resume with the same name and a new label")
+        if st.sidebar.button("Delete this resume version", key="del_resume"):
+            storage.delete_resume(person["student_id"], label)
+            st.session_state["msg"] = "Deleted " + label
+            st.rerun()
+        if st.sidebar.button("Delete whole profile", key="del_profile"):
+            storage.delete_profile(person["student_id"])
             st.session_state["msg"] = "Profile deleted"
             st.rerun()
 
@@ -159,3 +181,14 @@ if student:
     st.header("3. Interview-Prep Agent")
     st.write("Plan for " + ranked[0]["company_name"])
     st.dataframe(pd.DataFrame([{"Day": p["day"], "Focus": p["focus"], "Practice question": p["practice_question"]} for p in plan]), width="stretch", hide_index=True)
+
+if student and person and len(person["resumes"]) > 1:
+    st.header("Which resume fits which company?")
+    table = {}
+    for rr in person["resumes"]:
+        s = {"student_id": person["student_id"], "name": person["name"], "resume_skills": resume_skills(rr)}
+        table[rr["label"]] = {x["company_name"]: x["readiness"] for x in run_readiness(s, companies, user_history)}
+    df = pd.DataFrame(table)
+    df["Best resume"] = df.idxmax(axis=1)
+    df.index.name = "Company"
+    st.dataframe(df, width="stretch")
