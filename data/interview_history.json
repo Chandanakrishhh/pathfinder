@@ -1,0 +1,14 @@
+[
+  { "student_id": "S01", "company_id": "C04", "company_name": "Wipro", "company_type": "Service-based", "rounds_cleared": 2, "total_rounds": 3, "drop_off_stage": "HR" },
+  { "student_id": "S01", "company_id": "C05", "company_name": "Mindtree", "company_type": "Service-based", "rounds_cleared": 2, "total_rounds": 3, "drop_off_stage": "HR" },
+  { "student_id": "S02", "company_id": "C06", "company_name": "Accenture", "company_type": "Service-based", "rounds_cleared": 1, "total_rounds": 3, "drop_off_stage": "Technical" },
+  { "student_id": "S02", "company_id": "C07", "company_name": "Freshworks (last year)", "company_type": "Product-based", "rounds_cleared": 3, "total_rounds": 3, "drop_off_stage": "None (Selected)" },
+  { "student_id": "S04", "company_id": "C13", "company_name": "HCL", "company_type": "Service-based", "rounds_cleared": 1, "total_rounds": 3, "drop_off_stage": "Aptitude" },
+  { "student_id": "S05", "company_id": "C14", "company_name": "Fractal Analytics", "company_type": "Product-based", "rounds_cleared": 2, "total_rounds": 4, "drop_off_stage": "Technical" },
+  { "student_id": "S05", "company_id": "C15", "company_name": "LatentView", "company_type": "Product-based", "rounds_cleared": 2, "total_rounds": 4, "drop_off_stage": "Technical" },
+  { "student_id": "S06", "company_id": "C16", "company_name": "Zenoti", "company_type": "Product-based", "rounds_cleared": 3, "total_rounds": 3, "drop_off_stage": "None (Selected)" },
+  { "student_id": "S07", "company_id": "C17", "company_name": "TechMahindra", "company_type": "Service-based", "rounds_cleared": 2, "total_rounds": 3, "drop_off_stage": "HR" },
+  { "student_id": "S08", "company_id": "C18", "company_name": "L&T Infotech", "company_type": "Service-based", "rounds_cleared": 1, "total_rounds": 3, "drop_off_stage": "Aptitude" },
+  { "student_id": "S09", "company_id": "C19", "company_name": "Publicis Sapient", "company_type": "Product-based", "rounds_cleared": 2, "total_rounds": 3, "drop_off_stage": "Technical" },
+  { "student_id": "S10", "company_id": "C20", "company_name": "Qualcomm", "company_type": "Product-based", "rounds_cleared": 1, "total_rounds": 4, "drop_off_stage": "Technical" }
+]

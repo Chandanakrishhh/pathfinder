@@ -1,0 +1,10 @@
+[
+  { "company_id": "C01", "company_name": "Infosys", "role": "Software Engineer", "company_type": "Service-based", "jd_skills": ["Python", "SQL", "Git", "Problem Solving"], "deadline": "2026-10-05", "prep_days_left": 7 },
+  { "company_id": "C02", "company_name": "Zoho", "role": "Backend Developer", "company_type": "Product-based", "jd_skills": ["Java", "Spring Boot", "SQL", "DSA"], "deadline": "2026-10-02", "prep_days_left": 4 },
+  { "company_id": "C03", "company_name": "TCS Digital", "role": "Software Engineer", "company_type": "Service-based", "jd_skills": ["Python", "DSA", "Operating Systems", "DBMS"], "deadline": "2026-10-10", "prep_days_left": 12 },
+  { "company_id": "C08", "company_name": "Freshworks", "role": "Full Stack Developer", "company_type": "Product-based", "jd_skills": ["React", "JavaScript", "Node.js", "MongoDB"], "deadline": "2026-10-03", "prep_days_left": 5 },
+  { "company_id": "C09", "company_name": "Cognizant", "role": "Software Engineer", "company_type": "Service-based", "jd_skills": ["Java", "DSA", "DBMS", "SQL"], "deadline": "2026-10-08", "prep_days_left": 10 },
+  { "company_id": "C10", "company_name": "Mu Sigma", "role": "Data Analyst", "company_type": "Product-based", "jd_skills": ["Python", "Machine Learning", "SQL", "Deep Learning"], "deadline": "2026-10-01", "prep_days_left": 3 },
+  { "company_id": "C11", "company_name": "Capgemini", "role": "Software Engineer", "company_type": "Service-based", "jd_skills": ["Python", "SQL", "Django", "Problem Solving"], "deadline": "2026-10-12", "prep_days_left": 14 },
+  { "company_id": "C12", "company_name": "Amazon (Ops Tech)", "role": "SDE-1", "company_type": "Product-based", "jd_skills": ["DSA", "Operating Systems", "C++", "Problem Solving"], "deadline": "2026-10-04", "prep_days_left": 6 }
+]

@@ -1,0 +1,12 @@
+[
+  { "student_id": "S01", "name": "Chandana K", "resume_skills": ["Python", "SQL", "Machine Learning", "Django", "Git"] },
+  { "student_id": "S02", "name": "Manya R", "resume_skills": ["Java", "React", "DSA", "Spring Boot", "SQL"] },
+  { "student_id": "S03", "name": "Rohit S", "resume_skills": ["Python", "C++", "DSA", "Operating Systems"] },
+  { "student_id": "S04", "name": "Ayesha M", "resume_skills": ["Java", "DSA", "DBMS", "Spring Boot"] },
+  { "student_id": "S05", "name": "Karthik N", "resume_skills": ["Python", "Machine Learning", "Deep Learning", "SQL"] },
+  { "student_id": "S06", "name": "Divya P", "resume_skills": ["React", "JavaScript", "Node.js", "MongoDB"] },
+  { "student_id": "S07", "name": "Sameer A", "resume_skills": ["Python", "SQL", "DSA", "Git", "Problem Solving"] },
+  { "student_id": "S08", "name": "Neha T", "resume_skills": ["Java", "DSA", "Operating Systems", "DBMS"] },
+  { "student_id": "S09", "name": "Vikram J", "resume_skills": ["Python", "Django", "SQL", "AWS"] },
+  { "student_id": "S10", "name": "Priya S", "resume_skills": ["C++", "DSA", "Operating Systems", "Problem Solving"] }
+]
